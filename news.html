@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Облачко новостей | ИИ, Альметьевск, киновикторина</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #c2e0ff 0%, #8fcbff 40%, #6eb6f0 100%);
+            font-family: 'Segoe UI', 'Quicksand', system-ui, -apple-system, 'Nunito', 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* облачная система */
+        .clouds-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .cloud {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 1000px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.02);
+            pointer-events: none;
+            will-change: transform;
+            animation: floatCloud linear infinite;
+            filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.05));
+            z-index: 1;
+        }
+
+        .cloud::before,
+        .cloud::after {
+            content: '';
+            position: absolute;
+            background: inherit;
+            border-radius: 50%;
+            box-shadow: inherit;
+        }
+
+        .cloud::before {
+            width: 45%;
+            height: 145%;
+            top: -55%;
+            left: 8%;
+        }
+
+        .cloud::after {
+            width: 38%;
+            height: 130%;
+            top: -45%;
+            right: 12%;
+        }
+
+        .cloud.fluffy::before {
+            width: 30%;
+            height: 110%;
+            top: -35%;
+            left: 28%;
+        }
+
+        @keyframes floatCloud {
+            0% {
+                transform: translateX(-20%) translateY(0px);
+            }
+            50% {
+                transform: translateX(8%) translateY(-8px);
+            }
+            100% {
+                transform: translateX(120%) translateY(0px);
+            }
+        }
+
+        .cloud-1 { width: 150px; height: 85px; top: 8%; left: -10%; animation-duration: 22s; animation-delay: 0s; opacity: 0.9; }
+        .cloud-2 { width: 220px; height: 120px; top: 22%; left: -15%; animation-duration: 28s; animation-delay: 3s; opacity: 0.85; }
+        .cloud-3 { width: 180px; height: 100px; top: 55%; left: -25%; animation-duration: 35s; animation-delay: 1s; opacity: 0.9; }
+        .cloud-4 { width: 260px; height: 140px; top: 70%; left: -30%; animation-duration: 40s; animation-delay: 7s; opacity: 0.8; }
+        .cloud-5 { width: 130px; height: 70px; top: 15%; left: 40%; animation-duration: 30s; animation-delay: 5s; opacity: 0.85; }
+        .cloud-6 { width: 200px; height: 110px; top: 85%; left: 20%; animation-duration: 38s; animation-delay: 2s; opacity: 0.75; }
+        .cloud-7 { width: 300px; height: 160px; top: 42%; left: 60%; animation-duration: 45s; animation-delay: 0s; opacity: 0.7; }
+        .cloud-8 { width: 170px; height: 95px; top: 10%; left: 70%; animation-duration: 26s; animation-delay: 9s; opacity: 0.9; }
+        .cloud-9 { width: 140px; height: 80px; top: 78%; left: 80%; animation-duration: 33s; animation-delay: 4s; opacity: 0.8; }
+        .cloud-10 { width: 210px; height: 115px; top: 30%; left: 85%; animation-duration: 48s; animation-delay: 6s; opacity: 0.75; }
+
+        /* главная карточка */
+        .news-container {
+            position: relative;
+            z-index: 20;
+            max-width: 1300px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            border-radius: 3rem;
+            padding: 2rem 2rem 2.2rem;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        h1 {
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: #2c3e66;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.3px;
+            text-shadow: 2px 2px 10px rgba(255,255,210,0.5);
+        }
+
+        .subhead {
+            font-size: 1rem;
+            color: #3a5685;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            border-bottom: 2px dashed #9bb7d4;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .news-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 0.8rem;
+        }
+
+        .news-card {
+            background: rgba(255, 248, 240, 0.8);
+            border-radius: 2rem;
+            padding: 1.5rem 1.8rem;
+            backdrop-filter: blur(3px);
+            transition: all 0.25s;
+            border: 1px solid rgba(255, 241, 220, 0.9);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
+        }
+
+        .news-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 252, 245, 0.95);
+            border-color: #ffdfb3;
+            box-shadow: 0 15px 28px rgba(0, 0, 0, 0.08);
+        }
+
+        .news-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #1f3b62;
+            margin-bottom: 0.75rem;
+            border-left: 6px solid #ffa559;
+            padding-left: 1rem;
+        }
+
+        .news-title span {
+            font-size: 1.9rem;
+        }
+
+        .news-badge {
+            display: inline-flex;
+            background: #ffe1b9;
+            border-radius: 30px;
+            padding: 0.2rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #a5581c;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .news-content {
+            color: #2c3e4e;
+            line-height: 1.5;
+            font-size: 1rem;
+        }
+
+        .highlight-list {
+            list-style: none;
+            margin: 0.8rem 0 0.4rem 1rem;
+        }
+
+        .highlight-list li {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .highlight-list li::before {
+            content: "☁️";
+            font-size: 0.9rem;
+        }
+
+        .film-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin: 1rem 0 0.6rem;
+        }
+
+        .film-chip {
+            background: #ffffffcc;
+            border-radius: 2rem;
+            padding: 0.3rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #2b4a6e;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .film-chip:hover {
+            background: #ffe2b5;
+        }
+
+        .btn-soft, .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffcd94;
+            padding: 0.55rem 1.3rem;
+            border-radius: 3rem;
+            font-weight: 600;
+            color: #2b3b2c;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            margin-top: 0.8rem;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .btn-secondary {
+            background: #c7e2f5;
+            color: #1f4970;
+        }
+        .btn-soft:hover, .btn-secondary:hover {
+            background: #ffb45e;
+            transform: scale(0.98);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .credit {
+            font-size: 0.75rem;
+            color: #7e6a4e;
+            margin-top: 1rem;
+            text-align: right;
+            border-top: 1px dashed #e2caa4;
+            padding-top: 0.6rem;
+            font-style: italic;
+        }
+
+        /* форма регистрации на киновикторину */
+        .form-wrapper {
+            margin-top: 1rem;
+            background: rgba(245, 235, 215, 0.7);
+            border-radius: 1.8rem;
+            padding: 1.2rem;
+            transition: all 0.3s;
+        }
+        .reg-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+        }
+        .form-row label {
+            font-weight: 600;
+            color: #2c3e66;
+            width: 120px;
+        }
+        .form-row input, .form-row select {
+            flex: 1;
+            min-width: 180px;
+            padding: 0.6rem 1rem;
+            border-radius: 2rem;
+            border: 1px solid #e2c9a7;
+            background: #fffef7;
+            font-family: inherit;
+            outline: none;
+        }
+        .form-row input:focus {
+            border-color: #ffa559;
+        }
+        .submit-reg {
+            background: #ffa559;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            align-self: flex-start;
+            transition: 0.2s;
+        }
+        .submit-reg:hover {
+            background: #ff8c32;
+            transform: scale(0.97);
+        }
+        .form-note {
+            font-size: 0.75rem;
+            color: #7b623c;
+            margin-top: 0.4rem;
+        }
+
+        .old-site-banner {
+            margin-top: 2rem;
+            background: rgba(235, 215, 185, 0.7);
+            border-radius: 2rem;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .btn-mood {
+            background: #8fcbff;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            color: #1e3a5f;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        .btn-mood:hover {
+            background: #ffd89a;
+            transform: translateY(-2px);
+        }
+        footer {
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            text-align: center;
+            color: #4f6d8f;
+            opacity: 0.8;
+        }
+        .link-placeholder {
+            display: inline-flex;
+            gap: 12px;
+            margin: 10px 0 5px;
+            flex-wrap: wrap;
+        }
+        .afisha-link {
+            background: #e9dfcf;
+            padding: 0.3rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            color: #a55b2a;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .afisha-link:hover {
+            background: #ffd7a5;
+        }
+        @media (max-width: 720px) {
+            .news-container { padding: 1.3rem; }
+            h1 { font-size: 1.7rem; }
+            .news-title { font-size: 1.3rem; }
+            .news-card { padding: 1.2rem; }
+            .form-row label { width: 100%; }
+        }
+        @keyframes gentlePop {
+            0% { opacity: 0; transform: scale(0.97);}
+            100% { opacity: 1; transform: scale(1);}
+        }
+        .news-card { animation: gentlePop 0.45s ease backwards; }
+        .news-card:nth-child(1) { animation-delay: 0.05s; }
+        .news-card:nth-child(2) { animation-delay: 0.1s; }
+        .news-card:nth-child(3) { animation-delay: 0.15s; }
+        .news-card:nth-child(4) { animation-delay: 0.2s; }
+        .news-card:nth-child(5) { animation-delay: 0.25s; }
+    </style>
+</head>
+<body>
+
+<div class="clouds-container">
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2 fluffy"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="cloud cloud-4 fluffy"></div>
+    <div class="cloud cloud-5"></div>
+    <div class="cloud cloud-6"></div>
+    <div class="cloud cloud-7 fluffy"></div>
+    <div class="cloud cloud-8"></div>
+    <div class="cloud cloud-9"></div>
+    <div class="cloud cloud-10"></div>
+</div>
+
+<div class="news-container">
+    <h1>☁️ пушистые новости ☁️<br>ИИ, Альметьевск, киновикторина и жизнь</h1>
+    <div class="subhead">🌟 актуально, тепло и с заботой о будущем 🌟</div>
+
+    <div class="news-grid">
+        <!-- НОВОСТЬ 1: РФ / ИИ -->
+        <div class="news-card">
+            <div class="news-title"><span>🇷🇺</span> Искусственный интеллект в бизнесе: новый уровень <span class="news-badge">тренды</span></div>
+            <div class="news-content">
+                <p>📌 <strong>Раньше компании использовали базы знаний просто как электронные шкафы с инструкциями.</strong> Сегодня бизнес хочет превратить их в настоящий «мозг» для ИИ-помощника.</p>
+                <ul class="highlight-list">
+                    <li>Спрос на ИИ-решения вырос в <strong>3 раза</strong> — компании хотят, чтобы нейросети сами находили ответы.</li>
+                    <li>ИИ нужно качественное «топливо»: база знаний не должна быть свалкой файлов, а аккуратным размеченным архивом.</li>
+                    <li><strong>Требования бизнеса:</strong> безопасность, интеграция, ролевая модель, аудит знаний.</li>
+                    <li>Кто наведёт порядок в данных — получит реального ИИ-ассистента.</li>
+                </ul>
+                <div class="credit">📎 предоставил Садыков И.</div>
+            </div>
+        </div>
+
+        <!-- НОВОСТЬ 2: Татарстан -->
+        <div class="news-card">
+            <div class="news-title"><span>🌾</span> Татарстан: цифровая экосистема и родной язык <span class="news-badge">республика</span></div>
+            <div class="news-content">
+                <p>✨ <strong>ГигаЧат заговорил по-татарски!</strong> С 2026 года республика переходит к собственной цифровой экосистеме, где ИИ станет основой управления.</p>
+                <p>🎤 <strong>Российский венчурный форум в Казани</strong> (9 апреля) стал площадкой для презентации стартапов.</p>
+                <div class="credit">🔍 нашёл Ибрагимов 3.</div>
+            </div>
+        </div>
+
+        <!-- НОВОСТЬ 3: АПТ / Киновикторина с ФОРМОЙ регистрации -->
+        <div class="news-card">
+            <div class="news-title"><span>🎞️</span> АПТ: киновикторина «Память в кадрах» <span class="news-badge">студентам и классным руководителям</span></div>
+            <div class="news-content">
+                <p>⭐ <strong>В преддверии 81-летия Победы</strong> в техникуме пройдёт киновикторина. Команды по 5 человек. Даты: <strong>4–29 мая 2026</strong>. Необходимо заранее посмотреть фильмы из списка.</p>
+                <div class="film-grid" id="filmList">
+                    <span class="film-chip">🎞️ Судьба человека (1959)</span>
+                    <span class="film-chip">🎞️ Сестренка (2019)</span>
+                    <span class="film-chip">🎞️ Брестская крепость (2010)</span>
+                    <span class="film-chip">🎞️ Битва за Севастополь (2015)</span>
+                    <span class="film-chip">🎞️ Завтра была война (1987)</span>
+                    <span class="film-chip">🎞️ Летят журавли (1957)</span>
+                    <span class="film-chip">🎞️ Т-34 (2019)</span>
+                    <span class="film-chip">🎞️ 1941. Крылья над Берлином (2022)</span>
+                    <span class="film-chip">🎞️ А зори здесь тихие (1972)</span>
+                    <span class="film-chip">🎞️ Воздух (2023)</span>
+                </div>
+                
+                <!-- ФОРМА ОТПРАВКИ ЗАЯВКИ НА ИГРУ -->
+                <div class="form-wrapper" id="aptFormWrapper">
+                    <div style="font-weight: 600; margin-bottom: 0.5rem;">📝 Отправить заявку на участие в киновикторине:</div>
+                    <form id="aptRegForm" class="reg-form">
+                        <div class="form-row">
+                        <a href="https://forms.yandex.ru/u/69de05d584227cc04ae8076b">✉️ Отправить заявку</a>
+                        <div class="form-note" id="formStatus"></div>
+                    </form>
+                </div>
+                <div class="credit">🎥 предоставил Галяев Я.</div>
+            </div>
+        </div>
+
+        <!-- НОВОСТЬ 4: ИС-252Б Жизнь группы -->
+        <div class="news-card">
+            <div class="news-title"><span>💃</span> ИС-252Б: творчество, танцы и победы <span class="news-badge">жизнь группы</span></div>
+            <div class="news-content">
+                <p>🎶 <strong>14 апреля группа сходила на концерт команды Ришата Тухватуллина</strong> — фотографировались и танцевали!</p>
+                <p>🏆 Активное участие в конкурсах: «Единство народов» и «Нобелевские надежды КНИТУ».</p>
+                <div class="credit">🌸 информацию предоставила Якупова Р.</div>
+            </div>
+        </div>
+
+        <!-- НОВОСТЬ 5: АЛЬМЕТЬЕВСК (новый блок) -->
+        <div class="news-card">
+            <div class="news-title"><span>🏙️</span> Альметьевск: концерт, здоровье и весна <span class="news-badge">афиша</span></div>
+            <div class="news-content">
+                <p>🎤 <strong>Концерт Дины Гариповой</strong> — голос, который трогает душу! <br> 
+                📅 Даты: <strong>18 и 19 апреля</strong>. Билеты и афишу можно найти по ссылкам ниже.</p>
+                
+                <p>🚶‍♀️ <strong>Акция «10000 шагов к жизни»</strong> — заботимся о здоровье вместе! <br>
+                📅 16 апреля: регистрация с <strong>13:30 до 13:55</strong>, старт в <strong>14:00</strong>. Приглашаются все желающие.</p>
+                
+                <div class="link-placeholder">
+                    <!-- пользователь сам добавит реальные ссылки на афиши -->
+                    <a href="https://bileton.ru/events/dina-garipova-234895" class="afisha-link" id="posterGaripova">🎫 Афиша концерта Дины Гариповой</a>
+                    <a href="https://vk.com/wall-19102560_949783" class="afisha-link" id="posterSteps">🚶 Афиша «10000 шагов»</a>
+                </div>
+                <p class="form-note">✨ Ссылки на афиши можно заменить самостоятельно в коде или через атрибуты href.</p>
+                <div class="credit">☁️ Следите за событиями в родном городе!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- БЛОК ПЕРЕХОДА НА ПРОШЛЫЙ САЙТ НАСТРОЕНИЯ -->
+    <div class="old-site-banner">
+        <p>☁️✨ <strong>Внимание, облачко!</strong> На прошлом сайте «Уровень настроения» добавлена кнопка для перехода на этот новостной портал. А здесь ты можешь вернуться к милым вопросам и разминке:</p>
+        <button class="btn-mood" id="moodTransitionBtn">🌸 Перейти на сайт настроения 🌸</button>
+    </div>
+
+    <footer>💙 новости от друзей и облачного архива | всегда актуально, всегда тепло</footer>
+</div>
+
+<script>
+    (function() {
+
+
+        
+        // 3. Клик по фильмам - информация (оставляем как фишку)
+        const filmChips = document.querySelectorAll('.film-chip');
+        filmChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                const filmName = chip.innerText.replace('🎞️ ', '');
+                alert(`🎬 "${filmName}" — рекомендуем посмотреть перед киновикториной. Фильм входит в программу.`);
+            });
+        });
+
+        // 4. Обработка ссылок афиш (плейсхолдеры, пользователь сам добавит реальные URL)
+        const posterGaripova = document.getElementById('posterGaripova');
+        const posterSteps = document.getElementById('posterSteps');
+
+        // 5. Эффект наведения облаков на карточки
+        const cards = document.querySelectorAll('.news-card');
+        const clouds = document.querySelectorAll('.cloud');
+        clouds.forEach(cloud => {
+            cloud.addEventListener('mouseenter', () => {
+                cards.forEach(card => {
+                    card.style.backgroundColor = 'rgba(255, 252, 235, 0.95)';
+                });
+            });
+            cloud.addEventListener('mouseleave', () => {
+                cards.forEach(card => {
+                    card.style.backgroundColor = 'rgba(255, 248, 240, 0.8)';
+                });
+            });
+        });
+
+        // анимация появления
+        const container = document.querySelector('.news-container');
+        if (container) container.style.animation = 'gentlePop 0.6s ease-out';
+    })();
+</script>
+</body>
+</html>

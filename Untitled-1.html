@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Уровень настроения | Милые вопросы и разминка</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #c2e0ff 0%, #8fcbff 40%, #6eb6f0 100%);
+            font-family: 'Segoe UI', 'Quicksand', system-ui, -apple-system, 'Nunito', 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ---------- ОБЛАЧНАЯ СИСТЕМА (белые анимированные облака) ---------- */
+        .clouds-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .cloud {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 1000px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.02);
+            pointer-events: none;
+            will-change: transform;
+            animation: floatCloud linear infinite;
+            filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.05));
+            z-index: 1;
+        }
+
+        .cloud::before,
+        .cloud::after {
+            content: '';
+            position: absolute;
+            background: inherit;
+            border-radius: 50%;
+            box-shadow: inherit;
+        }
+
+        .cloud::before {
+            width: 45%;
+            height: 145%;
+            top: -55%;
+            left: 8%;
+        }
+
+        .cloud::after {
+            width: 38%;
+            height: 130%;
+            top: -45%;
+            right: 12%;
+        }
+
+        .cloud.fluffy::before {
+            width: 30%;
+            height: 110%;
+            top: -35%;
+            left: 28%;
+        }
+
+        @keyframes floatCloud {
+            0% {
+                transform: translateX(-20%) translateY(0px);
+            }
+            50% {
+                transform: translateX(8%) translateY(-8px);
+            }
+            100% {
+                transform: translateX(120%) translateY(0px);
+            }
+        }
+
+        .cloud-1 { width: 150px; height: 85px; top: 8%; left: -10%; animation-duration: 22s; animation-delay: 0s; opacity: 0.9; }
+        .cloud-2 { width: 220px; height: 120px; top: 22%; left: -15%; animation-duration: 28s; animation-delay: 3s; opacity: 0.85; }
+        .cloud-3 { width: 180px; height: 100px; top: 55%; left: -25%; animation-duration: 35s; animation-delay: 1s; opacity: 0.9; }
+        .cloud-4 { width: 260px; height: 140px; top: 70%; left: -30%; animation-duration: 40s; animation-delay: 7s; opacity: 0.8; }
+        .cloud-5 { width: 130px; height: 70px; top: 15%; left: 40%; animation-duration: 30s; animation-delay: 5s; opacity: 0.85; }
+        .cloud-6 { width: 200px; height: 110px; top: 85%; left: 20%; animation-duration: 38s; animation-delay: 2s; opacity: 0.75; }
+        .cloud-7 { width: 300px; height: 160px; top: 42%; left: 60%; animation-duration: 45s; animation-delay: 0s; opacity: 0.7; }
+        .cloud-8 { width: 170px; height: 95px; top: 10%; left: 70%; animation-duration: 26s; animation-delay: 9s; opacity: 0.9; }
+        .cloud-9 { width: 140px; height: 80px; top: 78%; left: 80%; animation-duration: 33s; animation-delay: 4s; opacity: 0.8; }
+        .cloud-10 { width: 210px; height: 115px; top: 30%; left: 85%; animation-duration: 48s; animation-delay: 6s; opacity: 0.75; }
+
+        /* главная карточка */
+        .mood-card {
+            position: relative;
+            z-index: 20;
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            border-radius: 3rem;
+            padding: 2rem 2rem 2.2rem;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #2c3e66;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.3px;
+            text-shadow: 2px 2px 10px rgba(255,255,210,0.5);
+        }
+
+        .sub {
+            font-size: 1.1rem;
+            color: #3a5685;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            border-bottom: 2px dashed #9bb7d4;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        /* выбор настроения */
+        .mood-selector {
+            margin: 1rem 0 1rem;
+        }
+
+        .mood-label {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f3b62;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .mood-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .mood-btn {
+            background: rgba(255, 250, 240, 0.9);
+            border: none;
+            border-radius: 3rem;
+            padding: 0.8rem 1.6rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e66;
+            cursor: pointer;
+            transition: 0.2s ease-in-out;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: inherit;
+            border: 1px solid rgba(255,255,240,0.8);
+        }
+
+        .mood-btn span {
+            font-size: 1.6rem;
+        }
+
+        .mood-btn:hover {
+            transform: translateY(-5px);
+            background: white;
+            box-shadow: 0 12px 22px rgba(0, 0, 0, 0.12);
+        }
+
+        .mood-btn.active {
+            background: #ffe6b3;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+            border: 1px solid #ffcd7e;
+            color: #2b4a6e;
+        }
+
+        /* ---------- БЛОК ОРИГИНАЛЬНЫХ ВОПРОСОВ (появляется после выбора настроения) ---------- */
+        .questions-area {
+            margin-top: 1.8rem;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            visibility: hidden;
+            display: block;
+        }
+
+        .questions-area.visible {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+        .question-intro {
+            font-size: 1rem;
+            background: rgba(250, 240, 215, 0.7);
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            margin-bottom: 1rem;
+            color: #4a5e7c;
+            font-weight: 600;
+        }
+
+        .questions-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.4rem;
+            margin-top: 0.5rem;
+        }
+
+        .single-question {
+            background: rgba(255, 248, 235, 0.8);
+            border-radius: 2rem;
+            padding: 1rem 1.2rem;
+            text-align: left;
+            backdrop-filter: blur(3px);
+            transition: all 0.2s;
+            border: 1px solid #fff3e0;
+        }
+
+        .question-text {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #2c3e50;
+            margin-bottom: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .question-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin-top: 0.4rem;
+        }
+
+        .q-option {
+            background: #ffffffcc;
+            border: none;
+            padding: 0.5rem 1.1rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2c5282;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            backdrop-filter: blur(2px);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .q-option:hover {
+            background: #ffe2b5;
+            transform: scale(0.97);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .question-feedback {
+            font-size: 0.85rem;
+            margin-top: 0.6rem;
+            color: #bf7f3b;
+            font-style: italic;
+            padding-left: 0.3rem;
+            min-height: 2rem;
+        }
+
+        /* ссылка на разминку */
+        .video-link-container {
+            margin-top: 2rem;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 248, 225, 0.85);
+            border-radius: 2rem;
+            backdrop-filter: blur(5px);
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            opacity: 0;
+            transform: translateY(20px);
+            visibility: hidden;
+        }
+
+        .video-link-container.show {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+        .video-link-container p {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #2c3e66;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .video-link-container a {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #ff9f4b;
+            padding: 0.8rem 1.8rem;
+            border-radius: 3rem;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: white;
+            transition: 0.2s;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+            border: 1px solid #ffcd94;
+        }
+
+        .video-link-container a:hover {
+            background: #ff8822;
+            transform: scale(1.02);
+        }
+
+        .thanks-message {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            color: #4a627a;
+            font-weight: 500;
+            min-height: 50px;
+        }
+
+        footer {
+            margin-top: 1.8rem;
+            font-size: 0.75rem;
+            color: #4f6d8f;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 620px) {
+            .mood-card {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .mood-btn {
+                padding: 0.5rem 1.2rem;
+                font-size: 1rem;
+            }
+            .question-text {
+                font-size: 0.95rem;
+            }
+            .q-option {
+                padding: 0.4rem 0.9rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        @keyframes gentlePop {
+            0% { opacity: 0; transform: scale(0.96);}
+            100% { opacity: 1; transform: scale(1);}
+        }
+        .video-link-container.show a {
+            animation: gentlePop 0.4s ease;
+        }
+    </style>
+</head>
+<body>
+
+<div class="clouds-container">
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2 fluffy"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="cloud cloud-4 fluffy"></div>
+    <div class="cloud cloud-5"></div>
+    <div class="cloud cloud-6"></div>
+    <div class="cloud cloud-7 fluffy"></div>
+    <div class="cloud cloud-8"></div>
+    <div class="cloud cloud-9"></div>
+    <div class="cloud cloud-10"></div>
+</div>
+
+<div class="mood-card">
+    <h1> Сәлам друзья! <br> ☁️ уровень настроения <br> сегодняшнего утра ☁️</h1>
+    <div class="sub">Как ты себя чувствуешь, дустым?</div>
+
+    <div class="mood-selector">
+        <div class="mood-label">
+            🌤️ выбери своё состояние 🌤️
+        </div>
+        <div class="mood-buttons" id="moodButtons">
+            <button class="mood-btn" data-mood="очень плохо"><span>😞</span> Очень плохо</button>
+            <button class="mood-btn" data-mood="плохо"><span>😕</span> Плохо</button>
+            <button class="mood-btn" data-mood="нормально"><span>😐</span> Нормально</button>
+            <button class="mood-btn" data-mood="хорошо"><span>🙂</span> Хорошо</button>
+            <button class="mood-btn" data-mood="отлично"><span>😍</span> Отлично!</button>
+        </div>
+    </div>
+
+    <!-- БЛОК ОРИГИНАЛЬНЫХ ЖИВЫХ ВОПРОСОВ (3 штуки, появляются после выбора настроения) -->
+    <div id="questionsBlock" class="questions-area">
+        <div class="question-intro">🌸 облачко спрашивает с любовью 🌸</div>
+        <div class="questions-grid">
+            <!-- Вопрос 1 -->
+            <div class="single-question" data-qid="1">
+                <div class="question-text">✨ 1. Какой маленький ритуал делает твоё утро особенно тёплым?</div>
+                <div class="question-options">
+                    <button class="q-option" data-q="1" data-opt="потянуться">🌅 Потянуться под одеялом</button>
+                    <button class="q-option" data-q="1" data-opt="музыка">🎵 Включить любимый плейлист</button>
+                    <button class="q-option" data-q="1" data-opt="питомец">🐾 Погладить кота/пса</button>
+                </div>
+                <div class="question-feedback" id="feedback-1"></div>
+            </div>
+            <!-- Вопрос 2 (оригинальный, живой) -->
+            <div class="single-question" data-qid="2">
+                <div class="question-text">☀️ 2. Какое волшебное слово ты даришь себе сегодня на старте дня?</div>
+                <div class="question-options">
+                    <button class="q-option" data-q="2" data-opt="справлюсь">💪 Я справлюсь!</button>
+                    <button class="q-option" data-q="2" data-opt="отдых">🌊 Я позволяю себе отдых</button>
+                    <button class="q-option" data-q="2" data-opt="радость">🌈 Я радуюсь мелочам</button>
+                </div>
+                <div class="question-feedback" id="feedback-2"></div>
+            </div>
+            <!-- Вопрос 3 (ещё один живой и не повторяется) -->
+            <div class="single-question" data-qid="3">
+                <div class="question-text">🍃 3. Что для тебя сейчас — главный ингредиент отличного дня?</div>
+                <div class="question-options">
+                    <button class="q-option" data-q="3" data-opt="улыбка">😄 Искренняя улыбка</button>
+                    <button class="q-option" data-q="3" data-opt="кофе">☕ Чашка ароматного кофе/чая</button>
+                    <button class="q-option" data-q="3" data-opt="спонтанность">🎈 Немного спонтанности</button>
+                </div>
+                <div class="question-feedback" id="feedback-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- БЛОК ССЫЛКИ НА МИЛУЮ РАЗМИНКУ (в конце) -->
+    <div id="videoBlock" class="video-link-container">
+        <p>🧸✨ ТВОЯ МИЛАЯ РАЗМИНКА ✨🧸</p>
+        <a href="https://rutube.ru/video/7bd06923ebd38d6d89fb74ae536968a5/">🌸 Начать утро с нежностью 🌸</a>
+    </div>
+
+    <div id="thanksMessage" class="thanks-message"></div>
+    <footer>💭 выбери настроение → ответь облачку → получи зарядку</footer>
+</div>
+
+<script>
+    (function() {
+        // ----- ПОСТОЯННАЯ ССЫЛКА НА МИЛУЮ РАЗМИНКУ (очень нежное видео) -----
+        const CUTE_WORKOUT_URL = "https://www.youtube.com/watch?v=7FqVJg8QXwA";
+
+        // DOM элементы
+        const moodButtons = document.querySelectorAll('.mood-btn');
+        const questionsBlock = document.getElementById('questionsBlock');
+        const videoContainer = document.getElementById('videoBlock');
+        const workoutLink = document.getElementById('workoutLink');
+        const thanksMessageDiv = document.getElementById('thanksMessage');
+        
+        // Для хранения выбранного настроения
+        let selectedMood = null;
+        
+        // Функция показа блоков (вопросы + ссылка)
+        function revealInteractiveBlocks() {
+            if (!questionsBlock.classList.contains('visible')) {
+                questionsBlock.classList.add('visible');
+            }
+            if (!videoContainer.classList.contains('show')) {
+                videoContainer.classList.add('show');
+                // плавный скролл к ссылке чуть позже (но вопросы выше, но скролл до ссылки не обязательно, оставим комфорт)
+                setTimeout(() => {
+                    videoContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 150);
+            }
+        }
+        
+        // Обновление персонализированного сообщения о настроении
+        function updateThanksMessage() {
+            if (selectedMood) {
+                let moodPhrase = '';
+                switch(selectedMood) {
+                    case 'очень плохо': moodPhrase = '🌧️ Утро серое, но это изменится! Облачко рядом ✨'; break;
+                    case 'плохо': moodPhrase = '🍃 Выдыхай... Сегодня станет теплее, а разминка поможет'; break;
+                    case 'нормально': moodPhrase = '🌼 Нормально — уже хорошо! А с нашими вопросами будет уютно'; break;
+                    case 'хорошо': moodPhrase = '🌟 Отличный настрой! Ответь на пару вопросов для души'; break;
+                    case 'отлично': moodPhrase = '🎉 Вау! Суперэнергия! Давай продлим волшебство'; break;
+                    default: moodPhrase = '☁️ Спасибо, что поделился(лась) настроением!';
+                }
+                thanksMessageDiv.innerHTML = `💬 ${moodPhrase} `;
+            } else {
+                thanksMessageDiv.innerHTML = '☁️ выбери уровень настроения — появится подарок-разминка и вопросы ☁️';
+            }
+        }
+        
+        // Обработка выбора настроения
+        function handleMoodSelection(event) {
+            const button = event.currentTarget;
+            const moodValue = button.getAttribute('data-mood');
+            if (!moodValue) return;
+            selectedMood = moodValue;
+            
+            // Визуальная активная кнопка
+            moodButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            // Обновляем сообщение и показываем блоки (вопросы и ссылка)
+            updateThanksMessage();
+            revealInteractiveBlocks();
+            
+            // Установка ссылки
+            workoutLink.href = CUTE_WORKOUT_URL;
+            
+            // Небольшой акцент: если вопросы уже были видны, но мы хотим напомнить
+            // Можно также "освежить" ответы на вопросы (не сбрасываем фидбек, чтобы не раздражать)
+            // Однако сделаем приятный эффект: подсветим блок вопросов лёгким покачиванием
+            if (questionsBlock.classList.contains('visible')) {
+                questionsBlock.style.animation = 'gentlePop 0.3s ease';
+                setTimeout(() => { questionsBlock.style.animation = ''; }, 300);
+            }
+        }
+        
+        // ----- ЛОГИКА ОРИГИНАЛЬНЫХ ВОПРОСОВ (живые, с ответами-откровениями) -----
+        // Обработчики для кнопок вариантов ответа на вопросы
+        const allOptions = document.querySelectorAll('.q-option');
+        
+        function getRandomTenderReply(questionId, chosenOptionText) {
+            // Оригинальные, тёплые фразы в зависимости от вопроса и выбора
+            const replies = {
+                1: {
+                    'потянуться': '☁️ Потягушки — лучшее начало! Твоё тело скажет спасибо 🌿',
+                    'музыка': '🎶 Мелодии утра творят чудеса! Пусть сегодня звучит твой любимый трек 💖',
+                    'питомец': '🐈 Мурчание лечит душу! Ты окружён(а) нежностью, это прекрасно ✨'
+                },
+                2: {
+                    'справлюсь': '💪 Именно! Ты сильнее, чем кажется. Облачко верит в тебя! 🌟',
+                    'отдых': '🌊 Разрешать себе отдыхать — мудрость. Сегодня будет бережный день 🕯️',
+                    'радость': '🌈 Радость в мелочах — суперсила! Пусть сегодня их будет много 🍭'
+                },
+                3: {
+                    'улыбка': '😄 Улыбка заразительна! Ты уже делаешь мир светлее ☀️',
+                    'кофе': '☕ Ароматный ритуал дарит уют. Наслаждайся каждым глотком! 🍃',
+                    'спонтанность': '🎈 Да! Неожиданные повороты — это приключения. Желаю веселых сюрпризов 🎉'
+                }
+            };
+            const fallback = '✨ Облачко обнимает тебя за этот ответ! Ты замечательный(ая) ✨';
+            if (replies[questionId] && replies[questionId][chosenOptionText]) {
+                return replies[questionId][chosenOptionText];
+            }
+            return fallback;
+        }
+        
+        function handleQuestionOptionClick(e) {
+            const btn = e.currentTarget;
+            const questionId = btn.getAttribute('data-q');
+            const optionKey = btn.getAttribute('data-opt');
+            const optionText = btn.innerText.trim();
+            
+            // Находим блок фидбека для этого вопроса
+            const feedbackDiv = document.getElementById(`feedback-${questionId}`);
+            if (feedbackDiv) {
+                const replyMessage = getRandomTenderReply(parseInt(questionId), optionKey);
+                feedbackDiv.innerHTML = `💭 ${replyMessage}`;
+                // Анимация лёгкого появления
+                feedbackDiv.style.opacity = '0';
+                setTimeout(() => { feedbackDiv.style.opacity = '1'; }, 10);
+                // через 4 секунды очистим, чтобы не нагромождать? но лучше оставить, но добавим плавное исчезновение? нет, пусть остаётся как добрый след
+                // Можно сделать автоматический сброс через 6 секунд, но это необязательно. 
+                // Чтобы не засорять, оставим на пару минут? Пусть живёт до следующего ответа на этот вопрос.
+                // При повторном ответе сообщение заменится.
+                
+                // Дополнительная радость: если все три вопроса получили хоть один ответ, покажем маленький комплимент в thanksMessageDiv
+                const allFeedbacks = document.querySelectorAll('.question-feedback');
+                let anyNonEmpty = false;
+                let answeredCount = 0;
+                allFeedbacks.forEach(fb => {
+                    if (fb.innerText.trim() !== '' && fb.innerText.trim() !== '💭 ') answeredCount++;
+                });
+                if (answeredCount >= 2) {
+                    thanksMessageDiv.innerHTML = thanksMessageDiv.innerHTML + '<br>🌈 Ты такой(ая) открытый(ая)! Спасибо за ответы, это очень ценно 🌈';
+                    setTimeout(() => {
+                        if (thanksMessageDiv.innerHTML.includes('ценно')) {
+                            // через 5 секунд вернем основное сообщение, но не портим опыт
+                            updateThanksMessage();
+                        }
+                    }, 5000);
+                }
+            }
+            
+            // Визуальный фидбек на кнопке
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => { btn.style.transform = ''; }, 120);
+        }
+        
+        // Навешиваем обработчики на все варианты ответов
+        allOptions.forEach(opt => {
+            opt.addEventListener('click', handleQuestionOptionClick);
+        });
+        
+        // Добавим слушатели на кнопки настроения
+        moodButtons.forEach(btn => {
+            btn.addEventListener('click', handleMoodSelection);
+        });
+        
+        // Инициализация начального состояния
+        workoutLink.href = CUTE_WORKOUT_URL;
+        updateThanksMessage();
+        
+        // Сделаем лёгкую "пушистую" атмосферу: если пользователь уже выбрал настроение (например, при обновлении? не нужно)
+        // Все блоки скрыты до выбора. Прекрасно.
+        
+        // Дополнительная "живая" фича: при наведении на облака лёгкая смена оттенка фона карточки (просто для настроения)
+        const card = document.querySelector('.mood-card');
+        document.querySelectorAll('.cloud').forEach(cloud => {
+            cloud.addEventListener('mouseenter', () => {
+                card.style.backgroundColor = 'rgba(255, 252, 240, 0.92)';
+            });
+            cloud.addEventListener('mouseleave', () => {
+                card.style.backgroundColor = 'rgba(255, 255, 255, 0.88)';
+            });
+        });
+        
+        // Небольшой фикс: чтобы при повторном выборе настроения блоки не скрывались (они уже видны, это ок)
+        // Сделаем так, что если пользователь выбрал другое настроение, сообщение обновится, но вопросы и ссылка уже показаны — прекрасно.
+        
+        // Анимация появления карточки
+        card.style.animation = 'gentlePop 0.5s ease-out';
+    })();
+</script>
+</body>
+</html>
