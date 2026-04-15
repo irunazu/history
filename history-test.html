@@ -504,6 +504,7 @@
                     case 'отлично': moodPhrase = '🎉 Вау! Суперэнергия! Давай продлим волшебство'; break;
                     default: moodPhrase = '☁️ Спасибо, что поделился(лась) настроением!';
                 }
+                thanksMessageDiv.innerHTML = `💬 ${moodPhrase} `;
             } else {
                 thanksMessageDiv.innerHTML = '☁️ выбери уровень настроения — появится подарок-разминка и вопросы ☁️';
             }
