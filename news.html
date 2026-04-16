@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Облачко новостей | ИИ, Альметьевск, киновикторина</title>
     <style>
         * {
@@ -122,6 +122,7 @@
             margin-bottom: 0.25rem;
             letter-spacing: -0.3px;
             text-shadow: 2px 2px 10px rgba(255,255,210,0.5);
+            word-break: break-word;
         }
 
         .subhead {
@@ -168,6 +169,7 @@
             margin-bottom: 0.75rem;
             border-left: 6px solid #ffa559;
             padding-left: 1rem;
+            flex-wrap: wrap;
         }
 
         .news-title span {
@@ -184,6 +186,7 @@
             color: #a5581c;
             margin-left: 0.5rem;
             vertical-align: middle;
+            white-space: nowrap;
         }
 
         .news-content {
@@ -202,11 +205,13 @@
             display: flex;
             align-items: baseline;
             gap: 8px;
+            word-break: break-word;
         }
 
         .highlight-list li::before {
             content: "☁️";
             font-size: 0.9rem;
+            flex-shrink: 0;
         }
 
         .film-grid {
@@ -226,6 +231,7 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             cursor: pointer;
             transition: 0.1s;
+            touch-action: manipulation;
         }
         .film-chip:hover {
             background: #ffe2b5;
@@ -247,6 +253,7 @@
             border: none;
             cursor: pointer;
             font-family: inherit;
+            touch-action: manipulation;
         }
         .btn-secondary {
             background: #c7e2f5;
@@ -301,6 +308,7 @@
             background: #fffef7;
             font-family: inherit;
             outline: none;
+            font-size: 1rem;
         }
         .form-row input:focus {
             border-color: #ffa559;
@@ -315,6 +323,7 @@
             cursor: pointer;
             align-self: flex-start;
             transition: 0.2s;
+            touch-action: manipulation;
         }
         .submit-reg:hover {
             background: #ff8c32;
@@ -352,6 +361,7 @@
             cursor: pointer;
             font-family: inherit;
             transition: 0.2s;
+            touch-action: manipulation;
         }
         .btn-mood:hover {
             background: #ffd89a;
@@ -378,17 +388,162 @@
             color: #a55b2a;
             text-decoration: none;
             font-weight: 500;
+            display: inline-block;
+            word-break: break-word;
+            touch-action: manipulation;
         }
         .afisha-link:hover {
             background: #ffd7a5;
         }
+
+        /* ===== АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ (без изменений визуального стиля) ===== */
+        /* Планшеты и большие телефоны */
         @media (max-width: 720px) {
             .news-container { padding: 1.3rem; }
             h1 { font-size: 1.7rem; }
             .news-title { font-size: 1.3rem; }
             .news-card { padding: 1.2rem; }
             .form-row label { width: 100%; }
+            .form-row input, .form-row select { width: 100%; min-width: unset; }
         }
+
+        /* Смартфоны (до 600px) — глубокая адаптация, сохраняя стили */
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem 0.8rem;
+            }
+            .news-container {
+                padding: 1.2rem 1rem 1.5rem;
+                border-radius: 2rem;
+            }
+            h1 {
+                font-size: 1.6rem;
+                line-height: 1.3;
+            }
+            .subhead {
+                font-size: 0.85rem;
+                margin-bottom: 1.5rem;
+            }
+            .news-card {
+                padding: 1rem;
+                border-radius: 1.5rem;
+            }
+            .news-title {
+                font-size: 1.2rem;
+                gap: 8px;
+                padding-left: 0.8rem;
+                border-left-width: 4px;
+            }
+            .news-title span {
+                font-size: 1.4rem;
+            }
+            .news-badge {
+                font-size: 0.6rem;
+                padding: 0.15rem 0.7rem;
+                white-space: normal;
+            }
+            .news-content {
+                font-size: 0.92rem;
+            }
+            .highlight-list li {
+                font-size: 0.88rem;
+            }
+            .film-chip {
+                padding: 0.25rem 0.8rem;
+                font-size: 0.75rem;
+            }
+            .film-grid {
+                gap: 0.5rem;
+            }
+            .btn-soft, .btn-secondary, .submit-reg, .btn-mood {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+            .form-wrapper {
+                padding: 1rem;
+            }
+            .form-row {
+                gap: 0.6rem;
+            }
+            .form-row label {
+                font-size: 0.9rem;
+            }
+            .form-row input, .form-row select {
+                padding: 0.5rem 0.9rem;
+                font-size: 0.9rem;
+            }
+            .submit-reg {
+                width: 100%;
+                justify-content: center;
+                align-self: stretch;
+            }
+            .old-site-banner {
+                flex-direction: column;
+                text-align: center;
+                padding: 1rem;
+                gap: 0.8rem;
+            }
+            .btn-mood {
+                justify-content: center;
+                width: 100%;
+            }
+            .link-placeholder {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+            }
+            .afisha-link {
+                width: 100%;
+                text-align: center;
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+            .credit {
+                font-size: 0.7rem;
+            }
+            .form-note {
+                font-size: 0.7rem;
+            }
+            footer {
+                font-size: 0.7rem;
+                margin-top: 1.5rem;
+            }
+            /* Облака чуть прозрачнее на телефонах (стиль не меняется, лишь чуть деликатнее) */
+            .cloud {
+                opacity: 0.65;
+            }
+            .cloud-1, .cloud-2, .cloud-3, .cloud-4, .cloud-5,
+            .cloud-6, .cloud-7, .cloud-8, .cloud-9, .cloud-10 {
+                opacity: 0.6;
+            }
+        }
+
+        /* Очень маленькие экраны (до 420px) */
+        @media (max-width: 420px) {
+            .news-container {
+                padding: 1rem 0.8rem 1.2rem;
+            }
+            h1 {
+                font-size: 1.4rem;
+            }
+            .news-title {
+                font-size: 1.1rem;
+            }
+            .news-card {
+                padding: 0.9rem;
+            }
+            .film-chip {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.7rem;
+            }
+            .highlight-list {
+                margin-left: 0.5rem;
+            }
+            .highlight-list li {
+                gap: 5px;
+            }
+        }
+
         @keyframes gentlePop {
             0% { opacity: 0; transform: scale(0.97);}
             100% { opacity: 1; transform: scale(1);}
@@ -445,7 +600,8 @@
                 <div class="credit">🔍 нашёл Ибрагимов 3.</div>
             </div>
         </div>
-<!-- НОВОСТЬ 5: АЛЬМЕТЬЕВСК (новый блок) -->
+
+        <!-- НОВОСТЬ 5: АЛЬМЕТЬЕВСК (новый блок) -->
         <div class="news-card">
             <div class="news-title"><span>🏙️</span> Альметьевск: концерт, здоровье и весна <span class="news-badge">афиша</span></div>
             <div class="news-content">
@@ -464,6 +620,7 @@
                 <div class="credit">☁️ Следите за событиями в родном городе!</div>
             </div>
         </div>
+
         <!-- НОВОСТЬ 3: АПТ / Киновикторина с ФОРМОЙ регистрации -->
         <div class="news-card">
             <div class="news-title"><span>🎞️</span> АПТ: киновикторина «Память в кадрах» <span class="news-badge">студентам и классным руководителям</span></div>
@@ -482,13 +639,14 @@
                     <span class="film-chip">🎞️ Воздух (2023)</span>
                 </div>
                 
-                <!-- ФОРМА ОТПРАВКИ ЗАЯВКИ НА ИГРУ -->
+                <!-- ФОРМА ОТПРАВКИ ЗАЯВКИ НА ИГРУ (без изменений) -->
                 <div class="form-wrapper" id="aptFormWrapper">
                     <div style="font-weight: 600; margin-bottom: 0.5rem;">📝 Отправить заявку на участие в киновикторине:</div>
                     <form id="aptRegForm" class="reg-form">
                         <div class="form-row">
-                        <a href="https://forms.yandex.ru/u/69de05d584227cc04ae8076b">✉️ Отправить заявку</a>
+                        <a href="https://forms.yandex.ru/u/69de05d584227cc04ae8076b" style="background:#ffa559; color:white; padding:0.6rem 1.2rem; border-radius:2.5rem; text-decoration:none; display:inline-block; text-align:center; font-weight:bold;">✉️ Отправить заявку</a>
                         <div class="form-note" id="formStatus"></div>
+                    </div>
                     </form>
                 </div>
                 <div class="credit">🎥 предоставил Галяев Я.</div>
@@ -504,10 +662,10 @@
                 <div class="credit">🌸 информацию предоставила Якупова Р.</div>
             </div>
         </div> 
-    <!-- БЛОК ПЕРЕХОДА НА ПРОШЛЫЙ САЙТ НАСТРОЕНИЯ -->
-    <div class="old-site-banner">
-        <a href="./history-test.html">🌸 Перейти на сайт настроения 🌸</button>
-    </div>
+        <!-- БЛОК ПЕРЕХОДА НА ПРОШЛЫЙ САЙТ НАСТРОЕНИЯ (оставлено в точности) -->
+        <div class="old-site-banner">
+            <a href="./history-test.html">🌸 Перейти на сайт настроения 🌸</button>
+        </div>
         
     </div>
 
@@ -516,10 +674,7 @@
 
 <script>
     (function() {
-
-
-        
-        // 3. Клик по фильмам - информация (оставляем как фишку)
+        // 1. Клик по фильмам - информация (интерактив сохранён)
         const filmChips = document.querySelectorAll('.film-chip');
         filmChips.forEach(chip => {
             chip.addEventListener('click', () => {
@@ -528,11 +683,7 @@
             });
         });
 
-        // 4. Обработка ссылок афиш (плейсхолдеры, пользователь сам добавит реальные URL)
-        const posterGaripova = document.getElementById('posterGaripova');
-        const posterSteps = document.getElementById('posterSteps');
-
-        // 5. Эффект наведения облаков на карточки
+        // 2. Эффект наведения облаков на карточки (работает на десктопе, на мобильных не мешает)
         const cards = document.querySelectorAll('.news-card');
         const clouds = document.querySelectorAll('.cloud');
         clouds.forEach(cloud => {
@@ -548,9 +699,12 @@
             });
         });
 
-        // анимация появления
+        // 3. Лёгкая анимация появления контейнера
         const container = document.querySelector('.news-container');
         if (container) container.style.animation = 'gentlePop 0.6s ease-out';
+
+        // 4. (Опционально) Для удобства на телефонах: если ссылка на Яндекс.Формы, то открывается в этой же вкладке (ничего не меняем)
+        // просто сохраняем поведение по умолчанию
     })();
 </script>
 </body>
